@@ -1,0 +1,1 @@
+C:/Users/Leon/.virtualenvs/img_ash-VdecYm_U/Scripts/python.exe ./pokehash.py %1
