@@ -1,7 +1,9 @@
-import os
-import requests
 import json
+import os
 import time
+
+import chalk
+import requests
 
 config = json.load(open("data/config.json", "r"))
 
@@ -13,7 +15,7 @@ header = {
 }
 
 
-def send_message(message):
+def send_message(message: str) -> requests.Response:
     """
     Sends a message to discord
 
@@ -22,31 +24,51 @@ def send_message(message):
     return requests.post(url, data=json.dumps({"content": message}), headers=header)
 
 
-def download_image(url, path):
+def download_image(url: str, path: str, silent: bool = False) -> str:
     """
     Downloads an image from a url
 
-    returns the path
+    returns the file path
     """
-    img = requests.get(url)
+    try:
+        res = requests.get(url)
+    except:
+        print(chalk.Chalk("red")("Failed to download image.", bold=True))
+        return
+
+    if "image" not in res.headers.get("content-type"):
+        print(chalk.Chalk("yellow")("URL is not an image. Skipping.", bold=True))
+        return
 
     with open(path, "wb") as f:
-        f.write(img.content)
+        f.write(res.content)
+        if not silent:
+            print(chalk.Chalk("green")(
+                "Image download finished: " + f.name, bold=True))
+
         f.close()
 
         return f.name
 
 
-def load_pokedex():
-    """Converts .json file to dictionary"""
-    return json.load(open("data/pokedex.json", "r"))
+def load_pokedex() -> dict:
+    """Converts data/pokedex.json to dictionary"""
+    try:
+        pokedex = json.load(open("data/pokedex.json", "r"))
+        print(chalk.Chalk("cyan")("Pokedex loaded.", bold=True))
+        return pokedex
+    except:
+        print(chalk.Chalk("red")(
+            "Failed to load pokedex. Maybe it doesn't exist?.", bold=True))
 
 
-def update_pokedex(data):
+def update_pokedex(data: dict) -> None:
     """Saves to .json file"""
     with open("data/pokedex.json", "w") as f:
         json.dump(data, f)
+        print(chalk.Chalk("cyan")("Pokedex updated.", bold=True))
         f.close()
+
 
 if __name__ == "__main__":
     while True:
