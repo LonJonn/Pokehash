@@ -5,7 +5,7 @@ import time
 import chalk
 import requests
 
-config = json.load(open("data/config.json", "r"))
+config = json.load(open("data/config.json"))
 
 url = f"https://discordapp.com/api/v6/channels/{config['channel_id']}/messages"
 
@@ -54,7 +54,7 @@ def download_image(url: str, path: str, silent: bool = False) -> str:
 def load_pokedex() -> dict:
     """Converts data/pokedex.json to dictionary"""
     try:
-        pokedex = json.load(open("data/pokedex.json", "r"))
+        pokedex = json.load(open("data/pokedex.json"))
         print(chalk.Chalk("cyan")("Pokedex loaded.", bold=True))
         return pokedex
     except:

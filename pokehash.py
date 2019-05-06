@@ -19,7 +19,7 @@ def download_pokedex_images() -> None:
 
 
 def calculate_hashes() -> None:
-    """calculates the dhashes for each pokemon image and stores them in pokedex.json"""
+    """calculates the phashes for each pokemon image and stores them in pokedex.json"""
     for pokemon in pokedex:
         hash = imagehash.phash(
             Image.open(f"data/images/{pokemon['id']}.png"))
