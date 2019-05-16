@@ -8,6 +8,7 @@ import utils
 
 client = discord.Client()
 
+helper_mode = False
 if "-h" in sys.argv:
     helper_mode = True
     print(chalk.Chalk("cyan")("Running in helper mode.", bold=True))
@@ -27,6 +28,8 @@ async def on_message(message):
         embed = message.embeds[0]
         if embed.description.startswith("Guess"):
             found = pokehash.find_pokemon(embed.image.url, is_url=True)
+            if not found:
+                return print(chalk.Chalk("red")("Unable to find pokemon."))
             if helper_mode:
                 await message.channel.send("It's a " + found[:3] + "...!")
             else:
@@ -34,4 +37,4 @@ async def on_message(message):
                 utils.send_message("p!info latest")
 
 if __name__ == "__main__":
-    client.run("NTcxOTgyMjIwMTY0ODU3ODU2.XMVqSg._6yO9G6PNdRoCqnNVDDQOnvzKMU")
+    client.run(utils.config["bot_token"])
